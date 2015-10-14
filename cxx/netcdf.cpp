@@ -1621,17 +1621,23 @@ NcBool NcAtt::remove( void )
 			    ) == NC_NOERR;
 }
 
-NcError::NcError( Behavior b )
+NcError::NcError( Behavior b, void (*_exit_handler)(int))
 {
     the_old_state = ncopts;	// global variable in version 2 C interface
     the_old_err = ncerr;	// global variable in version 2 C interface
+    the_old_exit_handler = exit_handler;
     ncopts = (int) b;
+    if (_exit_handler) {
+        printf("Setting exit_handler %p->%p\n", exit_handler, _exit_handler);
+        exit_handler = _exit_handler;
+    }
 }
 
 NcError::~NcError( void )
 {
     ncopts = the_old_state;
     ncerr = the_old_err;
+    exit_handler = the_old_exit_handler;
 }
 
 int NcError::get_err( void )	// returns most recent error
@@ -1648,7 +1654,9 @@ int NcError::set_err (int err)
 	    std::cout << nc_strerror(err) << std::endl;
 	}
 	if(ncopts == silent_fatal || ncopts == verbose_fatal) {
-	    exit(ncopts);
+          printf("BEGIN Calling exit handler\n");
+	  (*exit_handler)(ncopts);
+          printf("END Calling exit handler\n");
 	}
     }
     return err;
@@ -1656,3 +1664,4 @@ int NcError::set_err (int err)
 
 int NcError::ncerr = NC_NOERR;
 int NcError::ncopts = NcError::verbose_fatal ; // for backward compatibility
+void (*NcError::exit_handler)(int) = &exit;

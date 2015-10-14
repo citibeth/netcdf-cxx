@@ -10,6 +10,7 @@
 #ifndef NETCDF_HH
 #define NETCDF_HH
 
+#include <stdlib.h>
 #include "ncvalues.h"          // arrays that know their element type
 
 typedef const char* NcToken;    // names for netCDF objects
@@ -450,7 +451,7 @@ class NcError {
       };
 
     // constructor saves previous error state, sets new state
-    NcError( Behavior b = verbose_fatal );
+    NcError( Behavior b = verbose_fatal, void (*exit_handler)(int) = 0);
 
     // destructor restores previous error state
     virtual ~NcError( void );
@@ -462,8 +463,10 @@ class NcError {
   private:
     int the_old_state;
     int the_old_err;
+	void (*the_old_exit_handler)(int);
     static int ncopts;
     static int ncerr;
+	static void (*exit_handler)(int);
 };
 
 #endif                          /* NETCDF_HH */
