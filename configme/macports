@@ -1,0 +1,1 @@
+LDFLAGS=-L/Users/rpfische/macports/gcc49-python3/lib -lnetcdf CXXFLAGS=-I/Users/rpfische/macports/gcc49-python3/include ./configure --prefix=$HOME/macports/gcc49-python3/opt/netcdf-cxx-4.2
