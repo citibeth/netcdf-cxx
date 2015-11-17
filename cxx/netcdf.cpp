@@ -1628,7 +1628,7 @@ NcError::NcError( Behavior b, void (*_exit_handler)(int))
     the_old_exit_handler = exit_handler;
     ncopts = (int) b;
     if (_exit_handler) {
-        printf("Setting exit_handler %p->%p\n", exit_handler, _exit_handler);
+        printf("NetCDF CXX: Setting exit_handler %p->%p\n", exit_handler, _exit_handler);
         exit_handler = _exit_handler;
     }
 }
